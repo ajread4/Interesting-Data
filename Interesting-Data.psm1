@@ -38,11 +38,9 @@ Finds all files with extension .txt on \\172.20.20.12\test that contain the word
         [Parameter(Position = 0, ValueFromPipeline = $True, ValueFromPipelineByPropertyName = $True)]
         [ValidateNotNullOrEmpty()]
         [String[]]
-        $Shares = '.\',
+        $Share = '.\',
 
-        
         [Parameter(Position = 1, ValueFromPipeline = $True, ValueFromPipelineByPropertyName = $True)]
-        [ValidateNotNullOrEmpty()]
         [String[]]
         $Drives = '.\',
 
@@ -64,41 +62,37 @@ Finds all files with extension .txt on \\172.20.20.12\test that contain the word
         $Credential = [Management.Automation.PSCredential]::Empty
     )
 
-    foreach ($Share in $Shares){
-        foreach ($Drive in $Drives){
+    foreach ($Drive in $Drives){
 
-            if (Test-Path \\$Share\$Drive){ 
+        if (New-PSDrive -Name "Interesting-Data" -PSProvider "FileSystem" -Root "\\$Share\$Drive" -Credential $Credential){
 
-                Write-Host "Path Tested Successfully for \\$Share\$Drive\"
-                Write-Host "-------------------------------------"
+            Write-Host "Path Tested Successfully for \\$Share\$Drive"
+            Write-Host "-------------------------------------"
 
-                New-PSDrive -Name "Interesting-Data" -PSProvider "FileSystem" -Root "\\$Share\$Drive\" 
-
-                $PatternFiles = Get-ChildItem -Path \\$Share\$Drive\ -Include $Extensions -Recurse -Name -Force
-                foreach($PatternFile in $PatternFiles){
-                    if ($Names){ <# Retrieve files with only specific extensions#>
-                        Write-Host $PatternFile
-                    }
-                    elseif($Content){ <# Retrieve files with possible credential patterns within specific extensions#>
-                        
-                        $Results = Get-Content -Path \\$Share\$Drive\$PatternFile | Select-String -Pattern $Patterns
-
-                        if ($Results -ne $null ){
-                            Write-Host "Pattern File" $PatternFile
-                            Write-Host "Results:" $Results.Line
-                            Write-Host "-------------------------------------"
-                        }
-                    
-                    }else{
-                        Write-Host "No option selected (Names or Content)"
-                        Write-Host "-------------------------------------"
-                    }                
+            $PatternFiles = Get-ChildItem -Path \\$Share\$Drive -Include $Extensions -Recurse -Name -Force
+            foreach($PatternFile in $PatternFiles){
+                if ($Names){ <# Retrieve files with only specific extensions#>
+                    Write-Host $PatternFile
                 }
-                Remove-PSDrive -Name "Interesting-Data"
+                elseif($Content){ <# Retrieve files with possible credential patterns within specific extensions#>
+                    
+                    $Results = Get-Content -Path \\$Share\$Drive\$PatternFile | Select-String -Pattern $Patterns
+
+                    if ($Results -ne $null){
+                        Write-Host "Pattern File" $PatternFile
+                        Write-Host "Results:" $Results.Line
+                        Write-Host "-------------------------------------"
+                    }
+                
+                }else{
+                    Write-Host "No option selected (Names or Content)"
+                    Write-Host "-------------------------------------"
+                }                
             }
-            else{
-                Write-Host "Incorrect Path for Network Share \\$Share\$Drive\"
-            }
+            Remove-PSDrive -Name "Interesting-Data"
+        }
+        else{
+            Write-Host "Incorrect Path for Network Share \\$Share\$Drive"
         }
     }
-}
+} 
