@@ -77,10 +77,11 @@ Finds all files with extension .txt on \\172.20.20.12\test that contain the word
                 }
                 elseif($Content){ <# Retrieve files with possible credential patterns within specific extensions#>
                     $Results = Get-Content -Path \\$Share\$Drive\$PatternFile | Select-String -Pattern $Patterns
-
                     if ($Results -ne $null){
                         Write-Host "Pattern File" $PatternFile
                         Write-Host "Results:" $Results.Line
+                        $Result_Matches=@($Results.Matches) | sort -Unique
+                        Write-Host "Pattern(s):" $Result_Matches
                         Write-Host "-------------------------------------"
                     }
                 
