@@ -38,6 +38,24 @@ Interesting-Data -Share 172.20.20.12 -Drives test -Content $True
 
 Finds all files with extension '*.txt','*.md','*.doc','*.xlsx','*.csv','*.pptx','*.sh','*.config','*.json','*.yaml','*.ssh' on \\172.20.20.12\test that contain a long list of default matching strings. 
 
+.EXAMPLE
+
+Interesting-Data -Share 10.1.23.13 -Content $True -Credential $Cred -Drives "Fileshare" -Extensions *.csv -Patterns "password" 
+
+Finds all files with extension '.csv' and contain the pattern "password" on a remote share \\10.11.23.13\Fileshare that requires credentials. 
+
+.EXAMPLE 
+
+Interesting-Data -Share 10.1.3.16 -Content $True -Credential $Cred -Drives "Documents Repo" -Extensions *.csv -Patterns "password" -OutFile results.txt
+
+Outputs to a file called results.txt all files with extension '.csv' and contain the pattern "password" on a remote share "\\10.1.3.16\Documents Repo" that requires credentials.  
+
+.EXAMPLE 
+
+Interesting-Data -Share 10.1.3.16 -Names $True -Drives Documents -Extensions *.csv -OutFile results.txt
+
+Outputs to a file called results.txt all filenames with extension '.csv' on a remote share \\10.1.3.16 that requires credentials.  
+
 #>
     param(
 
@@ -79,15 +97,23 @@ Finds all files with extension '*.txt','*.md','*.doc','*.xlsx','*.csv','*.pptx',
             Write-Host "Path Tested Successfully for \\$Share\$Drive"
             Write-Host "-------------------------------------"
 
-            $PatternFiles = Get-ChildItem -Path \\$Share\$Drive -Include $Extensions -Recurse -Name -Force
+            $PatternFiles = Get-ChildItem -LiteralPath \\$Share\$Drive -Include $Extensions -Recurse -Name -Force
             Write-Host "Number of Files To Parse" $PatternFiles.Count
             foreach($PatternFile in $PatternFiles){
                 if ($Names){ <# Retrieve files with only specific extensions#>
-                    Write-Host $PatternFile
+                    if (!($PSBoundParameters.ContainsKey('OutFile'))){
+                        Write-Host $PatternFile
+                    }elseif(Test-Path -Path $OutFile){
+                        Add-Content -Path $OutFile -Value "Pattern File: $($PatternFile)"
+                    }
+                    else{
+                        New-Item -Path $OutFile -ItemType "file"
+                        Add-Content -Path $OutFile -Value "Pattern File: $($PatternFile)"
+                    }
                 }
                 elseif($Content){ <# Retrieve files with possible credential patterns within specific extensions#>
 
-                    $Results = Get-Content -Path \\$Share\$Drive\$PatternFile | Select-String -Pattern $Patterns
+                    $Results = Get-Content -LiteralPath \\$Share\$Drive\$PatternFile | Select-String -Pattern $Patterns
                     if ($Results -ne $null){
                         $Result_Matches=@($Results.Matches) | sort -Unique
                         if (!($PSBoundParameters.ContainsKey('OutFile'))){
