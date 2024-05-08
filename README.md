@@ -8,15 +8,11 @@ Interesting-Data searches for credentials, passwords, or other secret informatio
 
 ## Install 
 
-1. Download the repository. 
-```
-git clone https://github.com/ajread4/Interesting-Data.git
-```
+1. Download the repository. ```
+    - ```git clone https://github.com/ajread4/Interesting-Data.git```
 2. Move the entire folder into one of your PowerShell module directories. 
 3. Import the module
-```
-Import-Module Interesting-Data
-```
+    - ```Import-Module Interesting-Data```
 4. Run the Module based on [Usage](#Usage)
 
 ## Usage
