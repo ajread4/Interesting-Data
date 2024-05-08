@@ -16,6 +16,12 @@ By default, the tool searches for .txt, .md, .doc, and .xlsx files with the patt
 
 .EXAMPLE
 
+Interesting-Data -Share 172.20.20.12 -Drives test -Content $True 
+
+Finds all files with extension '*.txt','*.md','*.doc','*.xlsx','*.csv','*.pptx','*.sh','*.config','*.json','*.yaml','*.ssh''*.txt','*.md','*.doc','*.xlsx','*.csv','*.pptx','*.sh','*.config','*.json','*.yaml','*.ssh' on \\172.20.20.12\test that contain a long list of default matching strings. 
+
+.EXAMPLE
+
 Interesting-Data -Share 172.20.20.12 -Drives share -Extensions *.txt -Names $True 
 
 Finds all files with the .txt extension located in the share drive at 172.20.20.12. 
@@ -24,13 +30,13 @@ Finds all files with the .txt extension located in the share drive at 172.20.20.
 
 Interesting-Data -Share 172.20.20.12 -Drives share -Extensions *.txt -Content $True -Patterns 'creds|passwords'
 
-Finds all files with the .txt extension located in the share drive at 172.20.20.12 and returns matches with 
+Finds all files with the .txt extension located in the share drive at 172.20.20.12 and returns matches with the word "creds" or "passwords."
 
 .EXAMPLE
 
-Interesting-Data -Share 172.20.20.12 -Drives test -Extensions *.txt -Content $True 
+Interesting-Data -Share 172.20.20.12 -Drives test -Content $True 
 
-Finds all files with extension .txt on \\172.20.20.12\test that contain the word "creds" or "passwords"
+Finds all files with extension '*.txt','*.md','*.doc','*.xlsx','*.csv','*.pptx','*.sh','*.config','*.json','*.yaml','*.ssh' on \\172.20.20.12\test that contain a long list of default matching strings. 
 
 #>
     param(
@@ -54,6 +60,10 @@ Finds all files with extension .txt on \\172.20.20.12\test that contain the word
         [String[]]
         $Patterns='creds|password|username|credentials|pass|login|user|pwd|passcode|passphrase|secret|token|key|login|signin|auth|authenticate|authorization|access|pin|security code|access code|encrypted|decryption|secure|unlock|protected|confidential|verification|verify|api_key|private_key|public_key|encryption_key|passphrase|account|user_id|username|security_question|recovery_question|master_password|root_password|admin_password|backup_password|secret_key|entry_code|ssl_cert|ssl_key|auth_token|cipher|crypt|hash',
 
+        [Parameter(Position = 4, ValueFromPipeline = $True, ValueFromPipelineByPropertyName = $True)]
+        [String[]]
+        $OutFile,
+
         [bool] $Names=$False,
         [bool] $Content=$False,
 
@@ -76,14 +86,27 @@ Finds all files with extension .txt on \\172.20.20.12\test that contain the word
                     Write-Host $PatternFile
                 }
                 elseif($Content){ <# Retrieve files with possible credential patterns within specific extensions#>
+
                     $Results = Get-Content -Path \\$Share\$Drive\$PatternFile | Select-String -Pattern $Patterns
                     if ($Results -ne $null){
-                        Write-Host "Pattern File" $PatternFile
-                        Write-Host "Results:" $Results.Line
                         $Result_Matches=@($Results.Matches) | sort -Unique
-                        Write-Host "Pattern(s):" $Result_Matches
-                        Write-Host "-------------------------------------"
+                        if (!($PSBoundParameters.ContainsKey('OutFile'))){
+                            Write-Host "Pattern File" $PatternFile
+                            Write-Host "Pattern(s):" $Result_Matches
+                            Write-Host "-------------------------------------"
+                        }elseif(Test-Path -Path $OutFile){
+                            Add-Content -Path $OutFile -Value "Pattern File: $($PatternFile)"
+                            Add-Content -Path $OutFile -Value "Pattern(s): $($Result_Matches)"
+                            Add-Content -Path $OutFile -Value "-------------------------------------"
+                        }
+                        else{
+                            New-Item -Path $OutFile -ItemType "file"
+                            Add-Content -Path $OutFile -Value "Pattern File: $($PatternFile)"
+                            Add-Content -Path $OutFile -Value "Pattern(s): $($Result_Matches)"
+                            Add-Content -Path $OutFile -Value "-------------------------------------"
+                        }
                     }
+
                 
                 }else{
                     Write-Host "No option selected (Names or Content)"
