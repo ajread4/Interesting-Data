@@ -45,7 +45,7 @@ Usage can be found within the ```.EXAMPLE``` section of the module and below.
 
 ### Credentials
 
-The PowerShell module utilizes [PSCredential[(https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.pscredential?view=powershellsdk-7.4.0). To connect to shares that require credentials, you must: 
+The PowerShell module utilizes [PSCredential](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.pscredential?view=powershellsdk-7.4.0). To connect to shares that require credentials, you must: 
 
 1. ```$Password = ConvertTo-SecureString 'SecretPassword' -AsPlainText -Force```
 2. ```$Cred = New-Object System.Management.Automation.PSCredential('DOMAIN\ajread', $Password)```
