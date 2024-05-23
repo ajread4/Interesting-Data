@@ -40,21 +40,21 @@ Finds all files with extension '*.txt','*.md','*.doc','*.xlsx','*.csv','*.pptx',
 
 .EXAMPLE
 
-Interesting-Data -Share 10.1.23.13 -Content $True -Credential $Cred -Drives "Fileshare" -Extensions *.csv -Patterns "password" 
+Interesting-Data -Share 10.11.23.13 -Content $True -Credential $Cred -Drives "Fileshare" -Extensions *.csv -Patterns "password" 
 
 Finds all files with extension '.csv' and contain the pattern "password" on a remote share \\10.11.23.13\Fileshare that requires credentials. 
 
 .EXAMPLE 
 
-Interesting-Data -Share 10.1.3.16 -Content $True -Credential $Cred -Drives "Documents Repo" -Extensions *.csv -Patterns "password" -OutFile results.txt
+Interesting-Data -Share 10.10.3.16 -Content $True -Credential $Cred -Drives "Documents Repository" -Extensions *.csv -Patterns "password" -OutFile results.txt
 
-Outputs to a file called results.txt all files with extension '.csv' and contain the pattern "password" on a remote share "\\10.1.3.16\Documents Repo" that requires credentials.  
+Outputs to a file called results.txt all files with extension '.csv' and contain the pattern "password" on a remote share "\\10.10.3.16\Documents Repository" that requires credentials.  
 
 .EXAMPLE 
 
-Interesting-Data -Share 10.1.3.16 -Names $True -Drives Documents -Extensions *.csv -OutFile results.txt
+Interesting-Data -Share 10.10.3.16 -Names $True -Drives Documents -Extensions *.csv -OutFile results.txt
 
-Outputs to a file called results.txt all filenames with extension '.csv' on a remote share \\10.1.3.16 that requires credentials.  
+Outputs to a file called results.txt all filenames with extension '.csv' on a remote share \\10.10.3.16\Documents that requires credentials.  
 
 #>
     param(
