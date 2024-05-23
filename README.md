@@ -19,19 +19,19 @@ Interesting-Data searches for credentials, passwords, or other secret informatio
 
 Usage can be found within the ```.EXAMPLE``` section of the module and below. 
 
-1. Find all files with extension .txt,.md,.doc,.xlsx,.csv,.pptx,.sh,.config,.json,.yaml, or .ssh on \\172.20.20.12\test that contain a long list of default matching strings. 
+1. Find all files with extension .txt,.md,.doc,.xlsx,.csv,.pptx,.sh,.config,.json,.yaml, or .ssh on \\\\172.20.20.12\test that contain a long list of default matching strings. 
 
     - ```Interesting-Data -Share 172.20.20.12 -Drives test -Content $True```
 
-2. Find all files with the .txt extension located in the share drive at 172.20.20.12 (\\172.20.20.12\share). 
+2. Find all files with the .txt extension located in the share drive at 172.20.20.12 (\\\\172.20.20.12\share). 
 
     - ```Interesting-Data -Share 172.20.20.12 -Drives share -Extensions *.txt -Names $True ```
 
-3. Find all files with the .txt extension located in the share drive at 172.20.20.12 (\\172.20.20.12\share) and returns matches with the word "creds" or "passwords."
+3. Find all files with the .txt extension located in the share drive at 172.20.20.12 (\\\\172.20.20.12\share) and returns matches with the word "creds" or "passwords."
 
     - ```Interesting-Data -Share 172.20.20.12 -Drives share -Extensions *.txt -Content $True -Patterns 'creds|passwords'```
 
-4. Find all files with extension '.csv' and contain the pattern "password" on a remote share \\10.11.23.13\Fileshare that requires credentials. Prior to running, you must set [Credentials](#Credentials)
+4. Find all files with extension '.csv' and contain the pattern "password" on a remote share \\\\10.11.23.13\Fileshare that requires credentials. Prior to running, you must set [Credentials](#Credentials)
 
     - ```Interesting-Data -Share 10.1.23.13 -Content $True -Credential $Cred -Drives "Fileshare" -Extensions *.csv -Patterns "password" ```
 
