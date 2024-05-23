@@ -35,11 +35,11 @@ Usage can be found within the ```.EXAMPLE``` section of the module and below.
 
     - ```Interesting-Data -Share 10.1.23.13 -Content $True -Credential $Cred -Drives "Fileshare" -Extensions *.csv -Patterns "password" ```
 
-5. Output to a file called results.txt all files with extension '.csv' and contain the pattern "password" on a remote share "\\10.1.3.16\Documents Repo" that requires credentials. Prior to running, you must set [Credentials](#Credentials)
+5. Output to a file called results.txt all files with extension '.csv' and contain the pattern "password" on a remote share "\\\\10.1.3.16\Documents Repo" that requires credentials. Prior to running, you must set [Credentials](#Credentials)
 
     - ```Interesting-Data -Share 10.1.3.16 -Content $True -Credential $Cred -Drives "Documents Repo" -Extensions *.csv -Patterns "password" -OutFile results.txt```
 
-6. Output to a file called results.txt all filenames with extension '.csv' on a remote share \\10.1.3.16 that requires credentials. Prior to running, you must set [Credentials](#Credentials)
+6. Output to a file called results.txt all filenames with extension '.csv' on a remote share \\\\10.1.3.16 that requires credentials. Prior to running, you must set [Credentials](#Credentials)
 
     - ```Interesting-Data -Share 10.1.3.16 -Names $True -Drives Documents -Extensions *.csv -OutFile results.txt```
 
